@@ -9,25 +9,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Mongo defines a mongo dao.
+// mongo/mongo.go
+// Mongo定义一个mongodb的数据访问对象
 type Mongo struct {
 	col *mongo.Collection
 }
 
-// NewMongo creates a mongo dao.
+// 使用NewMongo来初始化一个mongodb的数据访问对象
 func NewMongo(db *mongo.Database) *Mongo {
 	return &Mongo{
-		col: db.Collection("account"),
+		col: db.Collection("test"),
 	}
 }
 
-// ResolveAccountID resolves the account id from open id.
-func (m *Mongo) ResolveAccountID(c context.Context, openID string) (string, error) {
+// 将test_id解析为ObjID
+func (m *Mongo) ResolveObjID(c context.Context, testID string) (string, error) {
 	res := m.col.FindOneAndUpdate(c, bson.M{
-		"open_id": openID,
+		"test_id": testID,
 	}, bson.M{
 		"$set": bson.M{
-			"open_id": openID,
+			"test_id": testID,
 		},
 	}, options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After))
 
